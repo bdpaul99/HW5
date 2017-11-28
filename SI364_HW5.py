@@ -128,7 +128,7 @@ class Hashtag(db.Model):
 # TODO: Add a field in the form for a user to enter their email (the email that goes with the twitter username entered).
 # TODO: Edit the template that renders the form so that email is also asked for!
 class TweetForm(FlaskForm):
-    email = StringField("please enter your email")
+    email = StringField("Please enter your email")
     text = StringField("What is the text of your tweet? Please separate all hashtags with commas in this case. e.g. 'Yay Python #python, #programming, #awesome' ", validators=[Required()])
     username = StringField("What is your Twitter username?",validators=[Required()])
     submit = SubmitField('Submit')
@@ -205,7 +205,7 @@ def index():
         if db.session.query(Tweet).filter_by(text=form.text.data, user_id= (get_or_create_user(db.session, form.username.data, form.email.data).id)).first():
             flash("You've already saved that tweet by this user!")
         else:
-            get_or_create_tweet(db.session, form.text.data, form.username.data,form.email.data)
+            get_or_create_tweet(db.session, form.text.data, form.username.data, form.email.data)
             if app.config['ADMIN']:
                 send_email(app.config['ADMIN'], 'New Tweet',
                            'mail/new_tweet', tweet=form.username.data)
@@ -229,12 +229,6 @@ def see_all_users():
     all_tweets = [(Tweet.query.filter_by(user_id=user.id).count(), user.twitter_username,user.email) for user in users]
     return render_template('all_tweets.html', all_tweets=all_tweets)
 
-@app.route('/all_emails')
-def see_all_emails():
-    all_emails = []
-    users = User.query.all()
-    all_emails = [user.email for user in users]
-    return render_template('all_emails.html', emails= all_emails)
 
 if __name__ == '__main__':
     db.create_all()
